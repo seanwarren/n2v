@@ -72,20 +72,13 @@ def pm_identity(local_sub_patch_radius):
 
 def manipulate_val_data(X_val, Y_val, num_pix=64, shape=(64, 64), value_manipulation=pm_uniform_withCP(5)):
     dims = len(shape)
-    if dims == 2:
-        box_size = np.round(np.sqrt(shape[0] * shape[1] / num_pix)).astype(np.int)
-        get_stratified_coords = dw.__get_stratified_coords2D__
-        rand_float = dw.__rand_float_coords2D__(box_size)
-    elif dims == 3:
-        box_size = np.round(np.power(shape[0] * shape[1] * shape[2] / num_pix, 1 / 3.0)).astype(np.int)
-        get_stratified_coords = dw.__get_stratified_coords3D__
-        rand_float = dw.__rand_float_coords3D__(box_size)
-
+    box_size = dw.get_box_size(shape, num_pix)
+    rand_float = dw.__rand_float_coordsND__(box_size, dims)
     n_chan = X_val.shape[-1]
 
     for j in range(X_val.shape[0]):
-        coords = get_stratified_coords(rand_float, box_size=box_size,
-                                            shape=np.array(X_val.shape)[1:-1])
+        coords = dw.get_stratified_coords(rand_float, box_size=box_size,
+                                                      shape=np.array(X_val.shape)[1:-1])
         y_val = []
         x_val = []
         for k in range(len(coords)):

@@ -15,7 +15,7 @@ def test_subpatch_sampling():
     def _sample2D(in_shape, out_shape, seed):
         X, Y, X_Batches, Y_Batches, indices = create_data(in_shape, out_shape)
         np.random.seed(seed)
-        Noise2VoidDataWrapper.__subpatch_sampling2D__(X, Y, X_Batches, Y_Batches, indices,
+        Noise2VoidDataWrapper.patch_sampler(X, Y, X_Batches, Y_Batches, indices,
                                                       range=in_shape[1:3]-out_shape[1:3], shape=out_shape[1:3])
 
         assert ([*X_Batches.shape] == out_shape).all()
@@ -37,7 +37,7 @@ def test_subpatch_sampling():
     def _sample3D(in_shape, out_shape, seed):
         X, Y, X_Batches, Y_Batches, indices = create_data(in_shape, out_shape)
         np.random.seed(seed)
-        Noise2VoidDataWrapper.__subpatch_sampling3D__(X, Y, X_Batches, Y_Batches, indices,
+        Noise2VoidDataWrapper.patch_sampler(X, Y, X_Batches, Y_Batches, indices,
                                                       range=in_shape[1:4]-out_shape[1:4], shape=out_shape[1:4])
 
         assert ([*X_Batches.shape] == out_shape).all()
@@ -72,17 +72,17 @@ def test_random_float_coords():
     np.random.seed(1)
     coords = (np.random.rand() * boxsize, np.random.rand() * boxsize)
     np.random.seed(1)
-    assert next(Noise2VoidDataWrapper.__rand_float_coords2D__(boxsize)) == coords
+    assert next(Noise2VoidDataWrapper.__rand_float_coordsND__(boxsize, 2)) == coords
 
     boxsize = 3
     np.random.seed(1)
     coords = (np.random.rand() * boxsize, np.random.rand() * boxsize, np.random.rand() * boxsize)
     np.random.seed(1)
-    assert next(Noise2VoidDataWrapper.__rand_float_coords3D__(boxsize)) == coords
+    assert next(Noise2VoidDataWrapper.__rand_float_coordsND__(boxsize, 3)) == coords
 
 
 def test_coord_gen():
-    coord_gen = Noise2VoidDataWrapper.__rand_float_coords2D__(13)
+    coord_gen = Noise2VoidDataWrapper.__rand_float_coordsND__(13, 2)
     shape = [128, 128]
     for i in range(100):
         coords = next(coord_gen)
@@ -90,7 +90,7 @@ def test_coord_gen():
         assert coords[1] < shape[1]
 
 
-    coord_gen = Noise2VoidDataWrapper.__rand_float_coords3D__(4)
+    coord_gen = Noise2VoidDataWrapper.__rand_float_coordsND__(4, 3)
     shape = [55, 55, 55]
     for i in range(100):
         coords = next(coord_gen)
