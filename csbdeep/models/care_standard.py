@@ -194,7 +194,7 @@ class CARE(object):
 
             if self.config.train_tensorboard:
                 from ..utils.tf import CARETensorBoard
-                self.callbacks.append(CARETensorBoard(log_dir=str(self.logdir), prefix_with_timestamp=False, n_images=3, write_images=True, prob_out=self.config.probabilistic))
+                self.callbacks.append(CARETensorBoard(log_dir=str(self.logdir), prefix_with_timestamp=True, n_images=3, write_images=True, prob_out=self.config.probabilistic))
 
         if self.config.train_reduce_lr is not None:
             from keras.callbacks import ReduceLROnPlateau
