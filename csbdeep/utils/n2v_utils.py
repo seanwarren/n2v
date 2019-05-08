@@ -16,7 +16,7 @@ def get_subpatch(patch, coord, local_sub_patch_radius):
 
     slices = [ slice(s, e) for s, e in zip(start, end)]
 
-    return patch[slices]
+    return patch[tuple(slices)]
 
 
 def random_neighbor(shape, coord):
