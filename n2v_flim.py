@@ -134,10 +134,21 @@ def n2v_flim(project, n2v_num_pix=32):
 
 
    # You can increase "train_steps_per_epoch" to get even better results at the price of longer computation. 
-   config = Config('SYXC', n_channel_in=n_chan, n_channel_out=n_chan, unet_kern_size = 3, train_steps_per_epoch=200, train_loss='mse',
+   config = Config('SYXC', 
+                  n_channel_in=n_chan, 
+                  n_channel_out=n_chan, 
+                  unet_kern_size = 5, 
+                  unet_n_depth = 2,
+                  train_steps_per_epoch=200, 
+                  train_loss='mae',
                   train_epochs=35,
-                  batch_norm = True, train_scheme = 'Noise2Void', train_batch_size = 128, n2v_num_pix = n2v_num_pix,
-                  n2v_patch_shape = (n2v_num_pix, n2v_num_pix), n2v_manipulator = 'uniform_withCP', n2v_neighborhood_radius='5')
+                  batch_norm = False, 
+                  train_scheme = 'Noise2Void', 
+                  train_batch_size = 128, 
+                  n2v_num_pix = n2v_num_pix,
+                  n2v_patch_shape = (n2v_num_pix, n2v_num_pix), 
+                  n2v_manipulator = 'uniform_withCP', 
+                  n2v_neighborhood_radius='5')
 
    vars(config)
 
@@ -145,7 +156,7 @@ def n2v_flim(project, n2v_num_pix=32):
 
    history = model.train(X, Y, validation_data=(X_val,Y_val))
 
-   model.load_weights( name='weights_best.h5')
+   model.load_weights(name='weights_best.h5')
 
    output_project = project.replace('.flimfit','-n2v.flimfit')
    if os.path.exists(output_project) : shutil.rmtree(output_project)
