@@ -109,6 +109,19 @@ def insert_results(filename, X, groups):
 
          idx = idx + num_image
 
+def augment_data(X):
+
+   XA = [];
+   XA.append(X) 
+   XA.append(np.rot90(X, 1, axes=(1,2)))
+   XA.append(np.rot90(X, 2, axes=(1,2)))
+   XA.append(np.rot90(X, 3, axes=(1,2)))
+   XA.append(np.flip(X, axis=1))
+   XA.append(np.flip(X, axis=2))
+   return np.concatenate(XA);
+
+
+
 
 def n2v_flim(project, n2v_num_pix=32):
    
@@ -120,6 +133,8 @@ def n2v_flim(project, n2v_num_pix=32):
 
    mean, std = np.mean(X), np.std(X)
    X = normalize(X, mean, std)
+
+   X = augment_data(X)
 
    X_val = X[0:10,...]
 
