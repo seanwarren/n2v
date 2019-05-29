@@ -1,11 +1,19 @@
+import os, re, sys
 from n2v_flim import n2v_flim
-import os
 
-root = '/home/seawar/data/2019-05-08/projects/'
+offset = int(sys.argv[1])
+n = int(sys.argv[2])
 
-sets = ['I=0010', 'I=0020', 'I=0030', 'I=0050', 'I=0080', 'I=0130', 'I=0220', 'I=0360', 'I=0600', 'I=1000']
-#sets = ['I=0600']
+os.environ["CUDA_VISIBLE_DEVICES"]=str(offset)
 
-for s in sets[0:2]:
-   n2v_flim(root + s + '.flimfit', 64)
+root = '/home/seawar/data/2019-05-22/projects/'
+
+# get only unprocessed projects
+sets = os.listdir(root)
+regex = re.compile(r'I=\d+\.flimfit')
+sets = list(filter(regex.search, sets))
+
+for i in range(offset,len(sets),n):
+    print("Processing: " + sets[i])
+    n2v_flim(root + sets[i], 64)
 

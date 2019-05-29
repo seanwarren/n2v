@@ -134,12 +134,12 @@ def n2v_flim(project, n2v_num_pix=32):
    mean, std = np.mean(X), np.std(X)
    X = normalize(X, mean, std)
 
-   X = augment_data(X)
+   XA = X #augment_data(X)
 
    X_val = X[0:10,...]
 
    # We concatenate an extra channel filled with zeros. It will be internally used for the masking.
-   Y = np.concatenate((X, np.zeros(X.shape)), axis=-1)
+   Y = np.concatenate((XA, np.zeros(XA.shape)), axis=-1)
    Y_val = np.concatenate((X_val.copy(), np.zeros(X_val.shape)), axis=-1) 
 
    n_x = X.shape[1]
@@ -169,7 +169,7 @@ def n2v_flim(project, n2v_num_pix=32):
 
    model = CARE(config, 'n2v_model', basedir=project)
 
-   history = model.train(X, Y, validation_data=(X_val,Y_val))
+   history = model.train(XA, Y, validation_data=(X_val,Y_val))
 
    model.load_weights(name='weights_best.h5')
 
